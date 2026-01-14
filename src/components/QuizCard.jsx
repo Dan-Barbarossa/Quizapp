@@ -12,11 +12,16 @@ const QuizCard = () => {
         fetch(URL)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
-                setQuestions(data.results)
-                console.log(questions)
-            })
+                const normalized = data.results.map((q) => ({
+                    ...q,
+                    question: he.decode(q.question),
+                    correct_answer: he.decode(q.correct_answer),
+                    incorrect_answers: q.incorrect_answers.map(he.decode),
+                }));
 
+                setQuestions(normalized);
+                console.log(normalized); // ✅ OK to log
+            });
     }, []);
 
     const handleAnswerClick = (answer) => {
